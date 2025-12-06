@@ -14,6 +14,11 @@ app.get("/categories", (req, res)=>{
     res.json(dataObj);
 })
 app.post("/categories", (req, res)=>{
+    const data = fs.readFileSync('data.json', 'utf-8');
+    const dataObj = JSON.parse(data);
+    const newData = req.body;
+    dataObj.categories.push(newData);
+    fs.writeFileSync('data.json', JSON.stringify(dataObj, null, 2));
     res.send("category added");
 })
 app.put("/categories", (req, res)=>{
