@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const fs = require('node:fs');
 
 app.use(express.json());
 
@@ -8,7 +9,9 @@ app.get("/", (req, res) =>{
 });
 
 app.get("/categories", (req, res)=>{
-    res.send("category fetched");
+    const data = fs.readFileSync('data.json', 'utf-8');
+    const dataObj = JSON.parse(data);
+    res.json(dataObj);
 })
 app.post("/categories", (req, res)=>{
     res.send("category added");
