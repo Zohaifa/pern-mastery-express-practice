@@ -22,6 +22,14 @@ app.post("/categories", (req, res)=>{
     res.send("category added");
 })
 app.put("/categories", (req, res)=>{
+    const data = fs.readFileSync('data.json', 'utf-8');
+    let dataObj = JSON.parse(data);
+    for(let i = 0; i < dataObj.categories.length; i++){
+        if(dataObj.categories[i].id === req.body.id){
+            dataObj.categories[i] = req.body;
+        }
+    }
+    fs.writeFileSync("data.json", JSON.stringify(dataObj, null, 2));
     res.send("category updated");
 })
 app.delete("/categories", (req, res)=>{
