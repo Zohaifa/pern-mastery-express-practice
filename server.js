@@ -25,6 +25,11 @@ app.put("/categories", (req, res)=>{
     res.send("category updated");
 })
 app.delete("/categories", (req, res)=>{
+    const data = fs.readFileSync('data.json', 'utf-8');
+    let dataObj = JSON.parse(data);
+    const targetId = parseInt(req.body.id);
+    dataObj.categories = dataObj.categories.filter((element)=> element.id !== targetId);
+    fs.writeFileSync("data.json", JSON.stringify(dataObj, null, 2));
     res.send("category deleted");
 })
 
