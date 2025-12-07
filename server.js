@@ -13,6 +13,17 @@ app.get("/categories", (req, res)=>{
     const dataObj = JSON.parse(data);
     res.json(dataObj);
 })
+app.get("/categories/:id", (req, res)=>{
+    const targetId = parseInt(req.params.id);
+    const data = JSON.parse(fs.readFileSync("data.json", "utf-8"));
+    for(let i = 0; i<data.categories.length; i++){
+        console.log(data.categories[i]);
+        if(data.categories[i].id === targetId){
+            res.json(data.categories[i]);
+        }
+    }
+    res.send("no such products with that id");
+})
 app.post("/categories", (req, res)=>{
     const data = fs.readFileSync('data.json', 'utf-8');
     const dataObj = JSON.parse(data);
