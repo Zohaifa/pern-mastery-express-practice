@@ -1,5 +1,7 @@
 import express from "express";
 import {z} from "zod";
+import bcrypt from "bcrypt"
+
 const app = express();
 
 app.use(express.json());
