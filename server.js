@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.json());
 
-app.get("/auth/sign-up", (req, res)=>{
+app.get("/auth/sign-up", async (req, res)=>{
     const userData = req.body;
     const createUserSchema = z.object({
         firstName : z.string().min(3),
@@ -15,6 +15,13 @@ app.get("/auth/sign-up", (req, res)=>{
         password : z.string().min(5),
     })
     const {success, data, error} = createUserSchema.safeParse(userData);
+    const hashedPassword = await bcrypt.hash(data.password, 5);
+    const user = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: hashedPassword
+    }
     if(success){
         res.send(data);
     }else{
