@@ -71,7 +71,48 @@ app.post("/auth/sign-in", async (req, res)=>{
     res.status(200).json({status: "success", message: "User retrieved", data: user});
 });
 
+app.get("/user/get", async (req, res)=>{
+    const users = await prisma.user.findMany();
+    if(!users){
+        res.json({error: "Couldn't perform the request"});
+    }
+    res.status(200).json({status: "Success", message: "All users successfully fetched", data: users});
+});
 
+
+app.delete("/user/delete/:id", async (req, res)=>{
+    const userId = req.params.id;
+     const userDeleteSchema = z.object({
+        id: z.uuid(),
+    });
+
+    const { success, error } = userDeleteSchema.safeParse({
+        id: userId,
+    });
+
+    if (!success) {
+        return res.status(400).json({ message: 'Validation failed', data: z.flattenError(error) });
+    }
+
+    let user = await prisma.user.findUnique({
+        where:{
+            id: userId
+        }
+    })
+    if(!user){
+        res.status(404).json({status: "Failure", message: "User not found"});
+    }
+    
+    user = await prisma.user.delete({
+        where:{
+            id: userId
+        },
+        omit:{
+            passwordHash: true
+        }
+    });
+    res.status(200).json({status: "Success", message: "User successfully deleted", data: user});
+});
 
 app.listen(3000, ()=>{
     console.log("Listening to port http://localhost:3000");
