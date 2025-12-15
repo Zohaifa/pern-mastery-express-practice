@@ -79,6 +79,25 @@ app.get("/user/get", async (req, res)=>{
     res.status(200).json({status: "Success", message: "All users successfully fetched", data: users});
 });
 
+app.get("/user/get/:id", async (req, res)=>{
+    const userId = req.params.id;
+    const userIdSchema = z.object({
+        id: z.uuid()
+    })
+    const {success, error} = userIdSchema.safeParse({id: userId});
+    if(!success){
+        res.status(400).json({status: "Failure", message: 'Not a proper id', data: z.flattenError(error) });
+    }
+    const user = await prisma.user.findUnique({
+        where:{
+            id: userId
+        }
+    })
+    if(!user){
+        res.status(404).json({status: "Failure", message: "User not found"});
+    }
+    res.status(200).json({status: "Success", message: "User fetched", data: user});
+});
 
 app.delete("/user/delete/:id", async (req, res)=>{
     const userId = req.params.id;
@@ -91,7 +110,7 @@ app.delete("/user/delete/:id", async (req, res)=>{
     });
 
     if (!success) {
-        return res.status(400).json({ message: 'Validation failed', data: z.flattenError(error) });
+        return res.status(400).json({status: "Failure", message: 'Not a proper id', data: z.flattenError(error) });
     }
 
     let user = await prisma.user.findUnique({
