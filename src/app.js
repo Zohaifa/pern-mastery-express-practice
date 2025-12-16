@@ -99,6 +99,53 @@ app.get("/user/get/:id", async (req, res)=>{
     res.status(200).json({status: "Success", message: "User fetched", data: user});
 });
 
+app.patch("/user/update/:id", async (req,res)=>{
+    const userId = req.params.id;
+    const userUpdateSchema = z.object({
+        id: z.uuid(),
+        firstName: z.string().optional(),
+        lastName: z.string().optional(),
+    });
+        
+    const {success, data, error} = userUpdateSchema.safeParse({
+        id: userId,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
+    });
+
+    if(!success){
+        res.status(400).json({status: "Failed", message: "Validation failed", "error": z.flattenError(error)});
+    }
+
+    const user = await prisma.user.findUnique({
+        where: {
+            id : userId
+        },
+        omit: {
+            passwordHash: true
+        }
+    });
+
+    if(!user){
+        res.status(404).json({status: "Failed", message: "user not found"})
+    }
+
+    const updatedUser = await prisma.user.update({
+        where: {
+            id : userId
+        },
+        data: {
+            firstName: data.firstName,
+            lastName: data.lastName
+        },
+        omit: {
+            passwordHash: true
+        }
+    });
+
+    res.status(200).json({status: "Success", message: "user successfully updated", "data": updatedUser});
+})
+
 app.delete("/user/delete/:id", async (req, res)=>{
     const userId = req.params.id;
      const userDeleteSchema = z.object({
