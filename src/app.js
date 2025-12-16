@@ -2,6 +2,7 @@ import express from "express";
 import {z} from "zod";
 import bcrypt from "bcrypt"
 import {prisma} from "./prisma.js"
+import jwt from "jsonwebtoken"
 
 const app = express();
 
@@ -68,8 +69,15 @@ app.post("/auth/sign-in", async (req, res)=>{
         res.status(401).json({status: "Failure", message: "Email and Password doesn't match"});
     }
 
-    res.status(200).json({status: "success", message: "User retrieved", data: user});
+    const secret_key = process.env.SUPER_SECRET_KEY;
+    const access_token = jwt.sign({id: user.id}, secret_key, {expiresIn: '1h'});
+
+    res.status(200).json({status: "success", message: "User signed in", data: {access_token}});
 });
+
+app.get("/auth/me", async (req, res)=>{
+    
+})
 
 app.get("/user/get", async (req, res)=>{
     const users = await prisma.user.findMany();
