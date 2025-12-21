@@ -1,5 +1,5 @@
 import { z } from "zod";
-import prisma from "prisma";
+import { prisma } from "./../database/prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
