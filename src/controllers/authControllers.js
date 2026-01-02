@@ -2,7 +2,7 @@ import { z } from "zod";
 import { prisma } from "./../database/prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImY2MmI2NTQ2LTg0NjItNDY5MC04NjJkLTBkZmU3NmNmOTQzNiIsImlhdCI6MTc2Njc0NzY4MSwiZXhwIjoxNzY3MzUyNDgxfQ.jXhS8gs7XvTLI-csjvLaTHw0TjM5emWOYGhHf3-Eyjw
 export const userSignIn = async (req, res) => {
   const userLoginSchema = z.object({
     email: z.email(),
@@ -61,7 +61,7 @@ export const userSignUp = async (req, res) => {
     const userCreateSchema = z.object({
         firstName : z.string().min(3),
         lastName : z.string().min(3),
-        email : z.string().email(),
+        email : z.email(),
         password : z.string().min(5),
     })
     

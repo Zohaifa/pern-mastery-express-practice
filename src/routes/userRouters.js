@@ -3,8 +3,8 @@ import { deleteUser, getAllUsers, getUserById, updateUser } from '../controllers
 
 const router = Router();
 
-router.get('/get', getAllUsers);
-router.get('/get/:id', getUserById);
+router.get('/', getAllUsers);
+router.get('/:id', getUserById);
 router.patch('/update/:id', updateUser);
 router.delete('/delete/:id', deleteUser);
 

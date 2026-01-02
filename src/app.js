@@ -1,6 +1,7 @@
 import express from "express";
 import authRoutes from './routes/authRouters.js'
 import userRoutes from './routes/userRouters.js'
+import categoryRoutes from './routes/categoryRouter.js'
 
 const app = express();
 
@@ -12,6 +13,8 @@ app.get("/", (req, res)=>{
 
 app.use("/user", userRoutes);
 app.use("/auth", authRoutes)
+app.use("/category", categoryRoutes);
+//app.use("/product", productRoutes);
 
 app.listen(3000, ()=>{
     console.log("Listening to port http://localhost:3000");

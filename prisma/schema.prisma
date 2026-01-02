@@ -21,4 +21,46 @@ model User{
   passwordHash String @db.VarChar(255)
   createdAt DateTime @default(now()) 
   updatedAt DateTime @updatedAt
+  
+  role Role @default(CUSTOMER)
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+model Product {
+  id          String   @id @default(uuid()) @db.Uuid()
+  title       String   @db.VarChar(255)
+  slug        String   @unique @db.VarChar(255)
+  description String   @db.Text()
+  basePrice   Float
+  originalPrice Float?
+  stock_quantity Int  @default(0)
+  specifications Json
+  isFeatured  Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId  String   @db.Uuid()  
+  
+}
+
+model Category {
+  id          String    @id @default(uuid()) @db.Uuid()
+  name        String    @db.VarChar(100)
+  slug        String    @unique @db.VarChar(255)
+  description String    @db.Text()
+  imageUrl    String    @db.VarChar(255)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  category    Category? @relation("CategoryToCategory", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId    String?   @db.Uuid()
+  
+  products    Product[]
+  categories  Category[] @relation("CategoryToCategory")
 }
