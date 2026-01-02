@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { getAllCategories, createCategory } from './../controllers/categoryControllers.js';
+import { getAllCategories, createCategory, getCategoryById, updateCategory, deleteCategory } from './../controllers/categoryControllers.js';
 import { authMiddleware } from './../middlewares/authMiddleware.js';
 import { adminMiddleware } from './../middlewares/adminMiddleware.js';
 
@@ -7,18 +7,12 @@ const router = Router();
 
 router.get('/', getAllCategories);
 
-router.get('/:id', (req, res) => {
-    return res.send(`Get category with ID: ${req.params.id}`);
-});
+router.get('/:id', getCategoryById);
 
-router.post('/create', authMiddleware, adminMiddleware, createCategory);
+router.post('/', authMiddleware, adminMiddleware, createCategory);
 
-router.patch('/:id', (req, res) => {
-    return res.send(`Update category with ID: ${req.params.id}`);
-});
+router.patch('/:id', authMiddleware, adminMiddleware, updateCategory);
 
-router.delete('/:id', (req, res) => {
-    return res.send(`Delete category with ID: ${req.params.id}`);
-});
+router.delete('/:id', authMiddleware, adminMiddleware, deleteCategory);
 
 export default router;
