@@ -52,16 +52,75 @@ export const createProduct = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
     const products = await prisma.product.findMany();
+    if(!products){
+        res.json({status: 'error', message: 'No products found'});
+    }
+    res.json({status: 'success', message: 'Products fetched succesffuly', data: products});
 }
 
 export const getProductById = async (req, res) => {
-    return res.send("Get product by ID");
+    const product = await prisma.product.findUnique({
+        where: {
+            id: req.params.id
+        }
+    });
+    if(!product){
+        return res.status(404).json({status: 'error', message: 'Product not found'});
+    }
+    res.json({status: 'success', message: 'Product fetched successfully', data: product});
 }
 
 export const updateProduct = async (req, res) => {
-    return res.send("Update product");
-}
+    const paramsSchema = z.object({
+        id: z.uuid()
+    });
+    const {success: paramsSuccess, data: paramsData, error: paramsError} = paramsSchema.safeParse({id: req.params.id});
+    if(!paramsSuccess){
+        return res.status(400).json({status: 'error', message: 'Invalid product ID', error: z.flattenError(paramsError)});
+    }
+    const productSchema = z.object({
+        title: z.string().min(3).optional(),
+        slug: z.string().min(3).optional(),
+        description: z.string().min(10).optional(),
+        basePrice: z.number().positive().optional(),
+        originalPrice: z.number().positive().optional(),
+        stock_quantity: z.number().int().nonnegative().optional(),
+        specifications: z.any().optional(),
+        isFeatured: z.boolean().optional(),
+        isActive: z.boolean().optional(),
+        categoryId: z.uuid().optional()
+    });
+    const {success: bodySuccess, data: bodyData, error: bodyError} = productSchema.safeParse(req.body);
+    if(!bodySuccess){
+        return res.status(400).json({status: 'error', message: 'Validation failed', error: z.flattenError(bodyError)});
+    }
+    const updatedProduct = await prisma.product.update({
+        where: {
+            id: req.params.id
+        },
+        data: bodyData
+    });
+    if(!updatedProduct){
+        return res.status(500).json({status: 'error', message: 'Failed to update product'});
+    }
+    res.json({status: 'success', message: 'Product updated successfully', data: updatedProduct});
+}  
 
 export const deleteProduct = async (req, res) => {
-    return res.send("Delete product");
+    const paramsSchema = z.object({
+        id: z.uuid()
+    });
+    const {success: paramsSuccess, data: paramsData, error: paramsError} = paramsSchema.safeParse({id: req.params.id});
+    if(!paramsSuccess){
+        return res.status(400).json({status: 'error', message: 'Invalid product ID', error: z.flattenError(paramsError)});
+    }
+    const deletedProduct = await prisma.product.delete({
+        where: {
+            id: req.params.id
+        }
+    });
+    if(!deletedProduct){
+        return res.status(500).json({status: 'error', message: 'Failed to delete product'});
+    }
+    res.json({status: 'success', message: 'Product deleted successfully', data: deletedProduct});
 }
