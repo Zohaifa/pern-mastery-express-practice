@@ -1,7 +1,7 @@
 import {Router} from "express"
-import { getAllCategories, createCategory, getCategoryById, updateCategory, deleteCategory } from './../controllers/categoryControllers.js';
-import { authMiddleware } from './../middlewares/authMiddleware.js';
-import { adminMiddleware } from './../middlewares/adminMiddleware.js';
+import { getAllCategories, createCategory, getCategoryById, updateCategory, deleteCategory } from '../controllers/categoryController.js';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
+import { adminMiddleware } from '../middlewares/adminMiddleware.js';
 
 const router = Router();
 

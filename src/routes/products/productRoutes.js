@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { getAllProducts, createProduct, getProductById, updateProduct, deleteProduct } from './../controllers/productControllers.js';
-import { authMiddleware } from './../middlewares/authMiddleware.js';
-import { adminMiddleware } from './../middlewares/adminMiddleware.js';
+import { getAllProducts, createProduct, getProductById, updateProduct, deleteProduct } from '../../controllers/products/index.js';
+import { authMiddleware } from '../../middlewares/authMiddleware.js';
+import { adminMiddleware } from '../../middlewares/adminMiddleware.js';
 
 const router = Router();
 

@@ -1,4 +1,4 @@
-import { prisma } from "./../database/prisma.js";
+import { prisma } from "../database/prisma.js";
 import { z } from "zod";
 
 export const createCategory = async (req, res) => {

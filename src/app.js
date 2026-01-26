@@ -1,8 +1,8 @@
 import express from "express";
-import authRoutes from './routes/authRouters.js'
+import authRoutes from './routes/authRoutes.js'
 import userRoutes from './routes/userRouters.js'
-import categoryRoutes from './routes/categoryRouter.js'
-import productRoutes from './routes/productRouter.js'
+import categoryRoutes from './routes/categoryRoutes.js'
+import productRoutes from './routes/products/index.js'
 
 const app = express();
 

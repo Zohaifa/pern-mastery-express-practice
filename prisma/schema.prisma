@@ -22,6 +22,7 @@ model User{
   createdAt DateTime @default(now()) 
   updatedAt DateTime @updatedAt
   
+  cart Cart[]
   role Role @default(CUSTOMER)
 }
 
@@ -37,7 +38,7 @@ model Product {
   description String   @db.Text()
   basePrice   Float
   originalPrice Float?
-  stock_quantity Int  @default(0)
+  stockQuantity Int  @default(0)
   specifications Json
   isFeatured  Boolean  @default(false)
   isActive    Boolean  @default(true)
@@ -46,6 +47,10 @@ model Product {
 
   category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId  String   @db.Uuid()  
+
+  images ProductImages[]
+  variants ProductVariants[]
+  cartItem CartItem[]
   
 }
 
@@ -63,4 +68,58 @@ model Category {
   
   products    Product[]
   categories  Category[] @relation("CategoryToCategory")
+}
+
+model ProductImages{
+  id String @id @default(uuid()) @db.Uuid()
+  imageUrl String @db.VarChar(255)
+  altText String? @db.VarChar(255)
+  displayOrder Int @default(0) 
+  isPrimary Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  productId String @db.Uuid()
+  product Product @relation(fields:[productId], references: [id], onDelete: Cascade)
+}
+
+model ProductVariants{
+  id String @id @default(uuid()) @db.Uuid()
+  variantName String @db.VarChar(50)
+  variantValue String @db.VarChar(50)  
+  priceAdjustment Float @default(0.00)
+  stockQuantity Int @default(0)
+  imageUrl String? @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  productId String @db.Uuid()
+  product Product @relation(fields:[productId], references: [id], onDelete: Cascade)
+
+  cartItem CartItem[]
+}
+
+model Cart {
+  id String @id @default(uuid()) @db.Uuid()
+  userId String? @db.Uuid()
+  sessionId String? @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cartItems CartItem[]
+}
+
+
+model CartItem {
+  id String @id @default(uuid()) @db.Uuid()
+  cartId String @db.Uuid()
+  productId String @db.Uuid()
+  variantId String? @db.Uuid()
+  quantity Int @default(1)
+  addedAt DateTime @default(now())
+
+  cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variant ProductVariants? @relation(fields: [variantId], references: [id], onDelete: Cascade)
 }

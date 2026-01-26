@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { prisma } from "./../database/prisma.js";
+import { prisma } from "../database/prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImY2MmI2NTQ2LTg0NjItNDY5MC04NjJkLTBkZmU3NmNmOTQzNiIsImlhdCI6MTc2Njc0NzY4MSwiZXhwIjoxNzY3MzUyNDgxfQ.jXhS8gs7XvTLI-csjvLaTHw0TjM5emWOYGhHf3-Eyjw
