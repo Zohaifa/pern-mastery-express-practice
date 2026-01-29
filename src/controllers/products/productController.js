@@ -124,3 +124,5 @@ export const deleteProduct = async (req, res) => {
     }
     res.json({status: 'success', message: 'Product deleted successfully', data: deletedProduct});
 }
+
+
