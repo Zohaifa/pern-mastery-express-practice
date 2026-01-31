@@ -20,6 +20,17 @@ app.use("/category", categoryRoutes);
 app.use("/product", productRoutes);
 app.use("/cart", cartRoutes)
 
+//Error Handling
+app.use((req, res, next) => {
+    res.status(404).json({ status: "fail", message: "Route not found"});
+})
+
+app.use((err, req, res, next) =>{
+    console.log(err.stack);
+    res.status(500).json({ status: 'Error', message: 'Something went wrong'})
+})
+
+
 app.listen(3000, ()=>{
     console.log("Listening to port http://localhost:3000");
 });
